@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Better Projectile Origin</name>
+  <packageId>Mlie.BetterProjectileOrigin</packageId>
+  <author>Mlie</author>
+  <url>https://github.com/emipa606/BetterProjectileOrigin</url>
+  <supportedVersions>
+    <li>1.3</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>Roolo.DualWield</li>
+  </loadAfter>
+  <description>[img]https://i.imgur.com/buuPQel.png[/img]
+
+Okay, so this mod may be a bit unnecessary but the idea got stuck in my head so I made it mostly to see if it was possible.
+
+In the vanilla game all projectiles shot by pawns originates from the center of the pawn, not from the weapon they are holding. The game dont know where on a weapon the projectile "should" spawn as the weapons are just textures. Ordinarily this is probably close enough but when using mods like [url=https://steamcommunity.com/sharedfiles/filedetails/?id=867467808]Camera+[/url] however, it can look a bit wierd when zoomed in. 
+
+So this mod scans all weapons at game-start, finds the last non-transparent pixel in their texture, assuming that is where the projectile should spawn. It then modifies the start-point for projectile to that spot instead of at the center of the pawn. Should work when using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1628211313]Dual Wield[/url] mod as well.
+
+Technically this will affect the combat ever so slightly, since the projectile path will be shorter depending on the length of the weapon. I dont think this will have any noticable impact however, but report if you see anything strange.
+
+Hopefully someone will find this mod useful!
+
+Thank you to the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2840633013]Projectile Offset Framework[/url] by Profilgate that put the idea in my head from the start.
+
+[table]
+    [tr]
+        [td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
+        [td][url=https://github.com/emipa606/BetterProjectileOrigin][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+    [/tr]
+    [tr]
+        [td][img]https://i.imgur.com/WjDSfUn.png[/img][/td]
+        [td][img]https://i.imgur.com/h5VwTNL.png[/img][/td]
+    [/tr]
+[/table]
+	
+[img]https://i.imgur.com/O0IIlYj.png[/img]
+Since modding is just a hobby for me I expect no donations to keep modding. If you still want to show your support you can gift me anything from my [url=https://store.steampowered.com/wishlist/id/Mlie]Wishlist[/url] or buy me a cup of tea.
+
+[url=https://ko-fi.com/G2G55DDYD][img]https://i.imgur.com/Utx6OIH.png[/img][/url]
+
+[img]https://i.imgur.com/PwoNOj4.png[/img]
+[list]
+[*] See if the the error persists if you just have this mod and its requirements active.
+[*] If not, try adding your other mods until it happens again.
+[*] Post your error-log using [url=https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] and command Ctrl+F12
+[*] For best support, please use the Discord-channel for error-reporting.
+[*] Do not report errors by making a discussion-thread, I get no notification of that.
+[*] If you have the solution for a problem, please post it to the GitHub repository.
+[/list]
+
+</description>
+</ModMetaData>

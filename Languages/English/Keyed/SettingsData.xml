@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <BPO.verboselogging>Verbose logging</BPO.verboselogging>
+  <BPO.verboselogging.tooltip>For finding issues, will log a lot</BPO.verboselogging.tooltip>
+  <BPO.version.label>Installed mod-version: {0}</BPO.version.label>
+</LanguageData>
