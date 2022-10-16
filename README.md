@@ -4,6 +4,7 @@
 
 
 Okay, so this mod may be a bit unnecessary but the idea got stuck in my head so I made it mostly to see if it was possible.
+If you find it useful I suggest you look into the https://steamcommunity.com/sharedfiles/filedetails/?id=2034896549]Gunplay-mod if you want more features. 
 
 In the vanilla game all projectiles shot by pawns originates from the center of the pawn, not from the weapon they are holding. The game dont know where on a weapon the projectile "should" spawn as the weapons are just textures. Ordinarily this is probably close enough but when using mods like https://steamcommunity.com/sharedfiles/filedetails/?id=867467808]Camera+ however, it can look a bit wierd when zoomed in. 
 
