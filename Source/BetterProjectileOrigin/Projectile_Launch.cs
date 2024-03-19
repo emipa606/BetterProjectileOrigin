@@ -11,7 +11,7 @@ public class Projectile_Launch
     [HarmonyPostfix]
     public static void Prefix(ref Vector3 origin, Thing launcher, Thing equipment)
     {
-        var offset = BetterProjectileOrigin.GetProjectileOffset(equipment, launcher);
+        var offset = BetterProjectileOrigin.GetProjectileOffset(equipment);
 
         if (offset == Vector3.zero)
         {

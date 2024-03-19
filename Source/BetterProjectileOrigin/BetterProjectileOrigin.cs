@@ -27,7 +27,7 @@ public static class BetterProjectileOrigin
         }
     }
 
-    public static Vector3 GetProjectileOffset(Thing equipment, Thing caster)
+    public static Vector3 GetProjectileOffset(Thing equipment)
     {
         if (equipment == null)
         {

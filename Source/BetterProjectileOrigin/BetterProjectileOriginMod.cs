@@ -25,8 +25,7 @@ internal class BetterProjectileOriginMod : Mod
     {
         Instance = this;
         currentVersion =
-            VersionFromManifest.GetVersionFromModMetaData(
-                ModLister.GetActiveModWithIdentifier("Mlie.BetterProjectileOrigin"));
+            VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
     }
 
     /// <summary>

@@ -9,13 +9,13 @@ namespace BetterProjectileOrigin;
 
 [HarmonyPatch]
 [HarmonyPriority(Priority.High)]
-public class PawnRenderer_DrawEquipmentAiming
+public class PawnRenderUtility_DrawEquipmentAiming
 {
     private static bool alreadyPatched;
 
     private static IEnumerable<MethodBase> TargetMethods()
     {
-        yield return typeof(PawnRenderer).GetMethod("DrawEquipmentAiming");
+        yield return typeof(PawnRenderUtility).GetMethod("DrawEquipmentAiming");
 
         if (alreadyPatched)
         {
