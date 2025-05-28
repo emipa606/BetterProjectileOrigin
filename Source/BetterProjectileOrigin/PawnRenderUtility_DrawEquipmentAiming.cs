@@ -34,6 +34,6 @@ public class PawnRenderUtility_DrawEquipmentAiming
 
     public static void Prefix(ref Thing eq, Vector3 drawLoc, float aimAngle)
     {
-        BetterProjectileOrigin.WeaponPostitions[eq] = new Tuple<Vector3, float>(drawLoc, aimAngle);
+        BetterProjectileOrigin.WeaponPositions[eq] = new Tuple<Vector3, float>(drawLoc, aimAngle);
     }
 }

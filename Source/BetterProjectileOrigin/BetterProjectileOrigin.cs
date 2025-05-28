@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
@@ -11,20 +10,18 @@ namespace BetterProjectileOrigin;
 [StaticConstructorOnStartup]
 public static class BetterProjectileOrigin
 {
-    public static readonly Dictionary<ThingDef, Tuple<float, float>> WeaponOffsets;
-    public static readonly Dictionary<Thing, Tuple<Vector3, float>> WeaponPostitions;
+    private static readonly Dictionary<ThingDef, Tuple<float, float>> WeaponOffsets;
+    private static readonly object WeaponOffsetsLock = new();
+
+    public static readonly Dictionary<Thing, Tuple<Vector3, float>> WeaponPositions;
+    private static readonly object WeaponPositionsLock = new();
 
     static BetterProjectileOrigin()
     {
         WeaponOffsets = new Dictionary<ThingDef, Tuple<float, float>>();
-        WeaponPostitions = new Dictionary<Thing, Tuple<Vector3, float>>();
+        WeaponPositions = new Dictionary<Thing, Tuple<Vector3, float>>();
         var harmony = new Harmony("Mlie.BetterProjectileOrigin");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
-
-        foreach (var weapon in DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsRangedWeapon))
-        {
-            cacheWeaponOffset(weapon);
-        }
     }
 
     public static Vector3 GetProjectileOffset(Thing equipment)
@@ -35,22 +32,45 @@ public static class BetterProjectileOrigin
             return Vector3.zero;
         }
 
-        if (!WeaponPostitions.ContainsKey(equipment))
+        lock (WeaponPositionsLock)
         {
-            LogMessage("No weapon-position found");
-            return Vector3.zero;
+            if (!WeaponPositions.ContainsKey(equipment))
+            {
+                LogMessage("No weapon-position found");
+                return Vector3.zero;
+            }
         }
 
-        if (!WeaponOffsets.ContainsKey(equipment.def))
+        // Lazy-load the offset if not already cached
+        lock (WeaponOffsetsLock)
         {
-            LogMessage($"Weapon {equipment} ({equipment.def}) has no offset");
-            return Vector3.zero;
+            if (!WeaponOffsets.ContainsKey(equipment.def))
+            {
+                LogMessage($"Offset for weapon {equipment} ({equipment.def}) not cached, calculating now.");
+                cacheWeaponOffset(equipment.def);
+
+                // If still not available (e.g., missing graphics), return zero
+                if (!WeaponOffsets.ContainsKey(equipment.def))
+                {
+                    LogMessage($"Weapon {equipment} ({equipment.def}) has no offset after calculation");
+                    return Vector3.zero;
+                }
+            }
         }
 
-        var rotation = WeaponPostitions[equipment].Item2;
-        var offset = rotation is > 200f and < 340f
-            ? new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2 * -1)
-            : new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2);
+        float rotation;
+        lock (WeaponPositionsLock)
+        {
+            rotation = WeaponPositions[equipment].Item2;
+        }
+
+        Vector3 offset;
+        lock (WeaponOffsetsLock)
+        {
+            offset = rotation is > 200f and < 340f
+                ? new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2 * -1)
+                : new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2);
+        }
 
         LogMessage($"Returning offset {offset} with rotation {rotation} for held weapon {equipment}");
         return offset.RotatedBy(rotation).RotatedBy(-90);
@@ -68,6 +88,12 @@ public static class BetterProjectileOrigin
 
     private static void cacheWeaponOffset(ThingDef weapon)
     {
+        if (weapon.graphicData?.Graphic?.MatSingle?.mainTexture == null)
+        {
+            LogMessage($"Weapon {weapon} is missing graphic data.", true);
+            return;
+        }
+
         var texture = weapon.graphicData.Graphic.MatSingle.mainTexture;
 
         var renderTexture = RenderTexture.GetTemporary(
@@ -111,6 +137,9 @@ public static class BetterProjectileOrigin
             $"Found endpixel {endPixel} of width {width} ({widthFactor}%) and height {icon.height} for {weapon} ({heightFactor}%) with drawSize {weapon.graphicData.drawSize}");
 
 
-        WeaponOffsets[weapon] = new Tuple<float, float>(widthFactor, heightFactor);
+        lock (WeaponOffsetsLock)
+        {
+            WeaponOffsets[weapon] = new Tuple<float, float>(widthFactor, heightFactor);
+        }
     }
 }

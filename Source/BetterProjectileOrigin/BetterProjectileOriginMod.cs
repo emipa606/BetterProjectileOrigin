@@ -35,10 +35,7 @@ internal class BetterProjectileOriginMod : Mod
     {
         get
         {
-            if (settings == null)
-            {
-                settings = GetSettings<BetterProjectileOriginSettings>();
-            }
+            settings ??= GetSettings<BetterProjectileOriginSettings>();
 
             return settings;
         }

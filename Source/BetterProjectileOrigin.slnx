@@ -1,0 +1,6 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="BetterProjectileOrigin/BetterProjectileOrigin.csproj" />
+</Solution>

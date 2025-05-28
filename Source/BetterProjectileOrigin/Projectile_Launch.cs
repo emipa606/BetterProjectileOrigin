@@ -19,8 +19,8 @@ public class Projectile_Launch
         }
 
         BetterProjectileOrigin.LogMessage(
-            $"Replacing origin from {origin} to {BetterProjectileOrigin.WeaponPostitions[equipment].Item1}, rotation {BetterProjectileOrigin.WeaponPostitions[equipment].Item2} for held weapon {equipment} ({equipment.DrawPos}) by {launcher} ({launcher.DrawPos}) and then adding offset {offset}");
+            $"Replacing origin from {origin} to {BetterProjectileOrigin.WeaponPositions[equipment].Item1}, rotation {BetterProjectileOrigin.WeaponPositions[equipment].Item2} for held weapon {equipment} ({equipment.DrawPos}) by {launcher} ({launcher.DrawPos}) and then adding offset {offset}");
 
-        origin = BetterProjectileOrigin.WeaponPostitions[equipment].Item1 + offset;
+        origin = BetterProjectileOrigin.WeaponPositions[equipment].Item1 + offset;
     }
 }
