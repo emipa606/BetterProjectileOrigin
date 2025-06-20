@@ -39,7 +39,6 @@ internal class BetterProjectileOriginMod : Mod
 
             return settings;
         }
-        set => settings = value;
     }
 
 
@@ -59,21 +58,21 @@ internal class BetterProjectileOriginMod : Mod
     /// <param name="rect"></param>
     public override void DoSettingsWindowContents(Rect rect)
     {
-        var listing_Standard = new Listing_Standard();
-        listing_Standard.Begin(rect);
-        listing_Standard.Gap();
+        var listingStandard = new Listing_Standard();
+        listingStandard.Begin(rect);
+        listingStandard.Gap();
 
-        listing_Standard.CheckboxLabeled("BPO.verboselogging".Translate(), ref Settings.VerboseLogging,
+        listingStandard.CheckboxLabeled("BPO.verboselogging".Translate(), ref Settings.VerboseLogging,
             "BPO.verboselogging.tooltip".Translate());
 
         if (currentVersion != null)
         {
-            listing_Standard.Gap();
+            listingStandard.Gap();
             GUI.contentColor = Color.gray;
-            listing_Standard.Label("BPO.version.label".Translate(currentVersion));
+            listingStandard.Label("BPO.version.label".Translate(currentVersion));
             GUI.contentColor = Color.white;
         }
 
-        listing_Standard.End();
+        listingStandard.End();
     }
 }

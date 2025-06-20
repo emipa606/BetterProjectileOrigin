@@ -10,15 +10,15 @@ namespace BetterProjectileOrigin;
 [StaticConstructorOnStartup]
 public static class BetterProjectileOrigin
 {
-    private static readonly Dictionary<ThingDef, Tuple<float, float>> WeaponOffsets;
-    private static readonly object WeaponOffsetsLock = new();
+    private static readonly Dictionary<ThingDef, Tuple<float, float>> weaponOffsets;
+    private static readonly object weaponOffsetsLock = new();
 
     public static readonly Dictionary<Thing, Tuple<Vector3, float>> WeaponPositions;
-    private static readonly object WeaponPositionsLock = new();
+    private static readonly object weaponPositionsLock = new();
 
     static BetterProjectileOrigin()
     {
-        WeaponOffsets = new Dictionary<ThingDef, Tuple<float, float>>();
+        weaponOffsets = new Dictionary<ThingDef, Tuple<float, float>>();
         WeaponPositions = new Dictionary<Thing, Tuple<Vector3, float>>();
         var harmony = new Harmony("Mlie.BetterProjectileOrigin");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -32,7 +32,7 @@ public static class BetterProjectileOrigin
             return Vector3.zero;
         }
 
-        lock (WeaponPositionsLock)
+        lock (weaponPositionsLock)
         {
             if (!WeaponPositions.ContainsKey(equipment))
             {
@@ -42,15 +42,15 @@ public static class BetterProjectileOrigin
         }
 
         // Lazy-load the offset if not already cached
-        lock (WeaponOffsetsLock)
+        lock (weaponOffsetsLock)
         {
-            if (!WeaponOffsets.ContainsKey(equipment.def))
+            if (!weaponOffsets.ContainsKey(equipment.def))
             {
                 LogMessage($"Offset for weapon {equipment} ({equipment.def}) not cached, calculating now.");
                 cacheWeaponOffset(equipment.def);
 
                 // If still not available (e.g., missing graphics), return zero
-                if (!WeaponOffsets.ContainsKey(equipment.def))
+                if (!weaponOffsets.ContainsKey(equipment.def))
                 {
                     LogMessage($"Weapon {equipment} ({equipment.def}) has no offset after calculation");
                     return Vector3.zero;
@@ -59,17 +59,17 @@ public static class BetterProjectileOrigin
         }
 
         float rotation;
-        lock (WeaponPositionsLock)
+        lock (weaponPositionsLock)
         {
             rotation = WeaponPositions[equipment].Item2;
         }
 
         Vector3 offset;
-        lock (WeaponOffsetsLock)
+        lock (weaponOffsetsLock)
         {
             offset = rotation is > 200f and < 340f
-                ? new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2 * -1)
-                : new Vector3(WeaponOffsets[equipment.def].Item1, 0, WeaponOffsets[equipment.def].Item2);
+                ? new Vector3(weaponOffsets[equipment.def].Item1, 0, weaponOffsets[equipment.def].Item2 * -1)
+                : new Vector3(weaponOffsets[equipment.def].Item1, 0, weaponOffsets[equipment.def].Item2);
         }
 
         LogMessage($"Returning offset {offset} with rotation {rotation} for held weapon {equipment}");
@@ -137,9 +137,9 @@ public static class BetterProjectileOrigin
             $"Found endpixel {endPixel} of width {width} ({widthFactor}%) and height {icon.height} for {weapon} ({heightFactor}%) with drawSize {weapon.graphicData.drawSize}");
 
 
-        lock (WeaponOffsetsLock)
+        lock (weaponOffsetsLock)
         {
-            WeaponOffsets[weapon] = new Tuple<float, float>(widthFactor, heightFactor);
+            weaponOffsets[weapon] = new Tuple<float, float>(widthFactor, heightFactor);
         }
     }
 }
