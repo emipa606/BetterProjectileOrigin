@@ -1,5 +1,8 @@
 # Changelog for BetterProjectileOrigin
 
+1.6.1 - Shots will not origin from the ghost of a pawn
+
+
 1.6.0 - Mod updated for 1.6 and passed autotests
 
 

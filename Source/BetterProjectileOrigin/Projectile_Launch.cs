@@ -11,7 +11,7 @@ public class Projectile_Launch
     [HarmonyPostfix]
     public static void Prefix(ref Vector3 origin, Thing launcher, Thing equipment)
     {
-        var offset = BetterProjectileOrigin.GetProjectileOffset(equipment);
+        var offset = BetterProjectileOrigin.GetProjectileOffset(launcher, equipment, out var weaponPosition);
 
         if (offset == Vector3.zero)
         {
@@ -19,8 +19,8 @@ public class Projectile_Launch
         }
 
         BetterProjectileOrigin.LogMessage(
-            $"Replacing origin from {origin} to {BetterProjectileOrigin.WeaponPositions[equipment].Item1}, rotation {BetterProjectileOrigin.WeaponPositions[equipment].Item2} for held weapon {equipment} ({equipment.DrawPos}) by {launcher} ({launcher.DrawPos}) and then adding offset {offset}");
+            $"Replacing origin from {origin} to {weaponPosition} for held weapon {equipment} ({equipment.DrawPos}) by {launcher} ({launcher.DrawPos}) and then adding offset {offset}");
 
-        origin = BetterProjectileOrigin.WeaponPositions[equipment].Item1 + offset;
+        origin = weaponPosition + offset;
     }
 }

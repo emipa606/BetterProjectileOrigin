@@ -10,6 +10,8 @@ namespace BetterProjectileOrigin;
 [StaticConstructorOnStartup]
 public static class BetterProjectileOrigin
 {
+    private const float MaxLauncherToWeaponDistanceSquared = 1f;
+
     private static readonly Dictionary<ThingDef, Tuple<float, float>> weaponOffsets;
     private static readonly object weaponOffsetsLock = new();
 
@@ -24,21 +26,38 @@ public static class BetterProjectileOrigin
         harmony.PatchAll(Assembly.GetExecutingAssembly());
     }
 
-    public static Vector3 GetProjectileOffset(Thing equipment)
+    public static Vector3 GetProjectileOffset(Thing launcher, Thing equipment, out Vector3 weaponPosition)
     {
+        weaponPosition = Vector3.zero;
+
         if (equipment == null)
         {
             LogMessage("No weapon is used");
             return Vector3.zero;
         }
 
+        Tuple<Vector3, float> cachedWeaponPosition;
         lock (weaponPositionsLock)
         {
-            if (!WeaponPositions.ContainsKey(equipment))
+            if (!WeaponPositions.TryGetValue(equipment, out cachedWeaponPosition))
             {
                 LogMessage("No weapon-position found");
                 return Vector3.zero;
             }
+        }
+
+        if (launcher == null)
+        {
+            LogMessage($"No launcher found for {equipment}");
+            return Vector3.zero;
+        }
+
+        var launcherPosition = launcher.DrawPos;
+        if ((cachedWeaponPosition.Item1 - launcherPosition).sqrMagnitude > MaxLauncherToWeaponDistanceSquared)
+        {
+            LogMessage(
+                $"Ignoring stale weapon-position {cachedWeaponPosition.Item1} for {equipment} because launcher {launcher} is at {launcherPosition}");
+            return Vector3.zero;
         }
 
         // Lazy-load the offset if not already cached
@@ -58,11 +77,8 @@ public static class BetterProjectileOrigin
             }
         }
 
-        float rotation;
-        lock (weaponPositionsLock)
-        {
-            rotation = WeaponPositions[equipment].Item2;
-        }
+        weaponPosition = cachedWeaponPosition.Item1;
+        var rotation = cachedWeaponPosition.Item2;
 
         Vector3 offset;
         lock (weaponOffsetsLock)
